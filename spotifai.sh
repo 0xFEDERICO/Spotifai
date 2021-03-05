@@ -1,12 +1,13 @@
 #!/bin/bash
-# Spotifai v0.6
-# Author: @0xFEDERICO
-# Source code: https://github.com/0xFEDERICO/Spotifai
+# Spotifai v0.7
+# Author: @0xfederico
+# Source code: https://github.com/0xfederico/Spotifai
 
 #print usage
 function usage() {
-    printf "\e[1;34mUsage: spotifai -p PLAYLIST-ID [-s SONGS-FOLDER-PATH || -d DATABASE-FOLDER-PATH || -h]\e[0m\n"
-    printf "\e[1;34m  -p | --playlist         =>  Youtube playlist id\e[0m\n";
+    printf "\e[1;34mUsage: spotifai -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]\e[0m\n"
+    printf "\e[1;34m  -a | --archive         =>   Run Spotifai in local mode\e[0m\n";
+    printf "\e[1;34m  -p | --playlist         =>  Youtube playlist id or archive file\e[0m\n";
     printf "\e[1;34m  -s | --songs-path       =>  Folder path where you want to store the songs\e[0m\n";
     printf "\e[1;34m  -h | --help             =>  This message\e[0m\n";
 }
@@ -15,6 +16,7 @@ function usage() {
 function parseArgs() {
     while [ "$1" != "" ]; do
         case "$1" in
+            -a | --archive )       ARCHIVE="$2";shift ;;
             -p | --playlist )       PLAYLIST="$2";shift ;;
             -s | --songs-path )     SONGSFOLDER="$2";shift ;;
             -h | --help )           usage;exit ;;
@@ -28,8 +30,13 @@ function parseArgs() {
     done
 
     #validate required args
-    if [[ -z "$PLAYLIST" ]]; then
-        printf "\e[31mE: missing playlist id.\e[0m\n";
+    if [[ -z "$ARCHIVE" ]] && [[ -z "$PLAYLIST" ]]; then
+        printf "\e[31mE: please insert at least one option between -a and -p.\e[0m\n";
+        usage;
+        exit 1;
+    fi
+    if [[ -n "$PLAYLIST" ]] && [[ -n "$ARCHIVE" ]]; then
+        printf "\e[31mE: please enter only one parameter between -a and -p.\e[0m\n";
         usage;
         exit 1;
     fi
@@ -82,23 +89,46 @@ function deps() {
 #music downloader
 function downloadMusic() {
     cd "$SONGSFOLDER" || { printf "\e[31mE: songs folder not found.\e[0m\n"; exit 1; }
-    printf "\e[1;34mI: start downloading all the songs\e[0m\n"
-    youtube-dl -i --extract-audio --audio-format mp3 --add-metadata --write-thumbnail --restrict-filename \
-    --download-archive database.txt "https://www.youtube.com/playlist?list=$PLAYLIST"
+    if [[ -z "$ARCHIVE" ]]; then
+        printf "\e[1;34mI: start downloading songs from playlist https://www.youtube.com/playlist?list=%s\e[0m\n" "$PLAYLIST"
+        youtube-dl -i --extract-audio --audio-format mp3 --add-metadata --write-thumbnail --restrict-filename \
+        --download-archive archive.txt "https://www.youtube.com/playlist?list=$PLAYLIST"
+    else
+        if [ -f "$DATABASE" ]; then
+            while true; do
+                read -rp "The $DATABASE file already exists, overwrite [O/o] or load existing data [L/l]? " ol
+                case $ol in
+                    [Oo]* ) cp "$ARCHIVE" "$DATABASE" && break;;
+                    [Ll]* ) break;;
+                esac
+            done
+        else
+            cp "$ARCHIVE" "$DATABASE"
+        fi
+        printf "\e[1;34mI: start downloading new songs from database file %s\e[0m\n" "$DATABASE"
+        while read -r line; do
+            FILES=$(find "$SONGSFOLDER" -iname "*.mp3" -print)
+            if ! grep -q "${line//-/\\-}" <<< "$FILES"; then                               
+                youtube-dl -i --extract-audio --audio-format mp3 --add-metadata --write-thumbnail \
+                --restrict-filename "https://youtu.be/$line"
+            fi   
+        done < "$DATABASE"
+
+    fi
     printf "\e[1;34mI: download process ended\e[0m\n"
     printf "\e[1;34mI: start files cleanup\e[0m\n"
-    count=$(ls -1 *.jpg *.webp 2>/dev/null | wc -l)
-    if [ "$count" != 0 ]; then 
+    count=$(find . -type f \( -name "*.jpg" -o -name "*.webp" \) | wc -l)
+    if [ "$count" != 0 ]; then
         for filename in *.mp3; do
             if [ -f "${filename%.*}.webp" ]; then
                 convert "${filename%.*}.webp" "${filename%.*}.jpg" #use magik with imagemagick 7
             fi
-	    if [ -f "${filename%.*}.jpg" ]; then
-                eyeD3 --add-image "${filename%.*}.jpg:FRONT_COVER" "$filename"
+        if [ -f "${filename%.*}.jpg" ]; then
+                eyeD3 -Q --add-image "${filename%.*}.jpg:FRONT_COVER" "$filename"
             fi
         done
-        rm -f *.jpg *.webp #it doesn't work with double quote
-    fi 
+        rm -f ./*.jpg ./*.webp #it doesn't work with double quote
+    fi
     printf "\e[1;34mI: the cleanup process is done, some statistics:\e[0m\n"
     find . -type f | sed 's/.*\.//' | sort | uniq -c #https://unix.stackexchange.com/a/18508
     printf "\e[1;34mI: if there are files with extension other than (mp3, txt, sh) please open an issue\e[0m\n"
@@ -106,37 +136,48 @@ function downloadMusic() {
 
 
 #check difference and remove local songs
-function syncToRemote() {
-    cd "$SONGSFOLDER" || { printf "\e[31mE: songs folder not found.\e[0m\n"; exit 1; }
-    printf "\e[1;34mI: sync playlist to remote\e[0m\n";
-    for (( i=0; i<10; ++i)); do #max 10 times
-       if ping -q -c 1 -W 1 youtube.com >/dev/null; then
-          JSON_DATA=$(youtube-dl -j --flat-playlist "$PLAYLIST")
-          echo "$JSON_DATA" | jq -r '.id' > "updated"
-	  if [ ! -s "updated" ]; then
-             for a in *.mp3; do
-                id=$(basename "${a##*-}" .mp3)
-                if ! grep -q "$id" "updated"; then
-	           printf "\e[1;34mI: you removed %s from your Youtube playlist, I also remove it from downloaded songs.\e[0m\n" "$i";
-                   rm "$a"
-                   sed -i "/$id/d" "database.txt"
-                fi
-             done
-	  fi
-	  rm "updated"
-          break
-       else
-          printf "\e[1;31mE: you need an internet connection to see if you have removed any songs from the playlist.\e[0m\n";
-          printf "\e[1;34mI: sleeping for 10 seconds...\e[0m\n";
-          sleep 10
-       fi
-    done
+function syncTo() {
+    if [[ -z "$ARCHIVE" ]]; then
+        cd "$SONGSFOLDER" || { printf "\e[31mE: songs folder not found.\e[0m\n"; exit 1; }
+        printf "\e[1;34mI: sync playlist to remote\e[0m\n";
+        for (( i=0; i<10; ++i)); do #max 10 times
+            if ping -q -c 1 -W 1 youtube.com >/dev/null; then
+                JSON_DATA=$(youtube-dl -j --flat-playlist "$PLAYLIST")
+                echo "$JSON_DATA" | jq -r '.id' > "updated"
+            if [ ! -s "updated" ]; then
+                    for a in *.mp3; do
+                        id=$(basename "${a##*-}" .mp3)
+                        if ! grep -q "$id" "updated"; then
+                    printf "\e[1;34mI: you removed %s from your Youtube playlist, I also remove it from downloaded songs.\e[0m\n" "$i";
+                        rm "$a"
+                        sed -i "/$id/d" "archive.txt"
+                        fi
+                    done
+            fi
+            rm "updated"
+                break
+            else
+                printf "\e[1;31mE: you need an internet connection to see if you have removed any songs from the playlist.\e[0m\n";
+                printf "\e[1;34mI: sleeping for 10 seconds...\e[0m\n";
+                sleep 10
+            fi
+        done
+    else
+        printf "\e[1;34mI: sync database file to songs folder\e[0m\n";
+        while read -r line; do
+            EXTRACTED_CODE=$(echo "$line" | grep -Poh '(?:\-[^\s]{11}\.[a-zA-Z0-9]{3}(?!\-[^\s]{11}\.[a-zA-Z0-9]{3}))+' | cut -c 2-12)
+            if ! grep -q "${EXTRACTED_CODE//-/\\-}" <<< "$(cat "$DATABASE")"; then
+                rm "$line"
+            fi   
+        done < <(find "$SONGSFOLDER" -iname "*.mp3" -print)
+    fi
 }
 
+DATABASE="$HOME/.sdb"
 parseArgs "$@"
 banner
 deps
 downloadMusic
-syncToRemote
+syncTo
 printf "\e[1;34mI: enjoy Spotifai ❤\e[0m\n"
 exit 0
