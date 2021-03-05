@@ -18,11 +18,11 @@ chmod +x spotifai.sh
 ```
 
 # Usage
-``./spotifai.sh -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]``
-``  -a | --archive          =>   Run Spotifai in local mode``
-``  -p | --playlist         =>  Youtube playlist id or archive file``
-``  -s | --songs-path       =>  Folder path where you want to store the songs``
-``  -h | --help             =>  This message``
+``./spotifai.sh -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]``</br>
+``  -a | --archive          =>   Run Spotifai in local mode``</br>
+``  -p | --playlist         =>  Youtube playlist id or archive file``</br>
+``  -s | --songs-path       =>  Folder path where you want to store the songs``</br>
+``  -h | --help             =>  This message``</br>
     
 # Termux + Tasker
  Go to play store and install Termux + Termux:Tasker + Tasker and run the previous installation commands.<br/>
