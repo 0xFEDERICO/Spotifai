@@ -6,7 +6,7 @@
 #print usage
 function usage() {
     printf "\e[1;34mUsage: spotifai -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]\e[0m\n"
-    printf "\e[1;34m  -a | --archive         =>   Run Spotifai in local mode\e[0m\n";
+    printf "\e[1;34m  -a | --archive          =>  Run Spotifai in local mode\e[0m\n";
     printf "\e[1;34m  -p | --playlist         =>  Youtube playlist id or archive file\e[0m\n";
     printf "\e[1;34m  -s | --songs-path       =>  Folder path where you want to store the songs\e[0m\n";
     printf "\e[1;34m  -h | --help             =>  This message\e[0m\n";
@@ -16,7 +16,7 @@ function usage() {
 function parseArgs() {
     while [ "$1" != "" ]; do
         case "$1" in
-            -a | --archive )       ARCHIVE="$2";shift ;;
+            -a | --archive )        ARCHIVE="$2";shift ;;
             -p | --playlist )       PLAYLIST="$2";shift ;;
             -s | --songs-path )     SONGSFOLDER="$2";shift ;;
             -h | --help )           usage;exit ;;
