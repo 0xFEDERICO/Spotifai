@@ -31,9 +31,13 @@ function parseArgs() {
 
     #validate required args
     if [[ -z "$ARCHIVE" ]] && [[ -z "$PLAYLIST" ]]; then
-        printf "\e[31mE: please insert at least one option between -a and -p.\e[0m\n"
-        usage
-        exit 1
+        if [[ -f "$DATABASE" ]]; then
+            printf "\e[1;34mI: running Spotifai in local mode.\e[0m\n"
+        else
+            printf "\e[31mE: please insert at least one option between -a and -p.\e[0m\n"
+            usage
+            exit 1
+        fi
     fi
     if [[ -n "$PLAYLIST" ]] && [[ -n "$ARCHIVE" ]]; then
         printf "\e[31mE: please enter only one parameter between -a and -p.\e[0m\n"
@@ -89,7 +93,7 @@ function deps() {
 #music downloader, it runs in local or playlist mode
 function downloadMusic() {
     cd "$SONGSFOLDER" || { printf "\e[31mE: songs folder not found.\e[0m\n"; exit 1; }
-    if ! [[ -z "$ARCHIVE" ]]; then
+    if [[ -n "$ARCHIVE" ]]; then
         cp "$ARCHIVE" "$DATABASE"
     fi
     if [[ -f "$DATABASE" ]]; then #local mode
