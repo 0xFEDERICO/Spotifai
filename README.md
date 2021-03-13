@@ -23,12 +23,19 @@ chmod +x spotifai.sh
 ``&nbsp;&nbsp;-p | --playlist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Youtube playlist id or archive file``</br>;
 ``&nbsp;&nbsp;-s | --songs-path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Folder path where you want to store the songs``</br>;
 ``&nbsp;&nbsp;-h | --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;This message``</br>;
-    
-# Termux + Tasker
+
+# Local mode (it's free) 🤳
+ Go to F-droid and install termux + termux-widget and run the previous installation commands.<br/>
+ Follow this guide https://wiki.termux.com/wiki/Termux:Widget and create a one line script like that:<br/>
+ ``bash /path/to/spotifai.sh -p ... -s ...``.<br/>
+ In this way you can run the script as soon as you finish adding the song id in the "archive.txt" file.<br/>
+
+# Playlist mode (tasker costs around 3 euros) ☁️
  Go to play store and install Termux + Termux:Tasker + Tasker and run the previous installation commands.<br/>
  Follow this guide https://wiki.termux.com/wiki/Termux:Tasker and create a one line script like that:<br/>
- ``bash /path/to/spotifai.sh -p ... -s ...``.
- In this way you can run the script automatically one or more times a day and keep the playlist synchronized!!!
+ ``bash /path/to/spotifai.sh -p ... -s ...``.<br/>
+ In this way you can run the script automatically one or more times a day and keep the playlist synchronized!!!<br/>
+ ⚠️You can also do without tasker using termux-widget but you will have to manually run the script every time you update the playlist.⚠️<br/>
 
  </br></br>
 ![](https://img.shields.io/github/issues/0xfederico/Spotifai)
