@@ -27,13 +27,13 @@ spotifai -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]</br>
 # Local mode (it's free) 🤳
  Go to F-droid and install termux + termux-widget and run the previous installation commands.<br/>
  Follow this guide https://wiki.termux.com/wiki/Termux:Widget and create a one line script like that:<br/>
- ``bash /path/to/spotifai.sh -p ... -s ...``.<br/>
+ &nbsp;&nbsp;``bash /path/to/spotifai.sh -p ... -s ...``.<br/>
  In this way you can run the script as soon as you finish adding the song id in the "archive.txt" file.<br/>
 
 # Playlist mode (tasker costs around 3 euros) ☁️
  Go to play store and install Termux + Termux:Tasker + Tasker and run the previous installation commands.<br/>
  Follow this guide https://wiki.termux.com/wiki/Termux:Tasker and create a one line script like that:<br/>
- ``bash /path/to/spotifai.sh -p ... -s ...``.<br/>
+ &nbsp;&nbsp;``bash /path/to/spotifai.sh -p ... -s ...``.<br/>
  In this way you can run the script automatically one or more times a day and keep the playlist synchronized!!!<br/>
  ⚠️You can also do without tasker using termux-widget but you will have to manually run the script every time you update the playlist.⚠️<br/>
 
