@@ -180,4 +180,5 @@ deps
 downloadMusic
 syncTo
 printf "\e[1;34mI: enjoy Spotifai ❤\e[0m\n"
+read -n1 -p "Press any key to continue... "
 exit 0
