@@ -18,11 +18,11 @@ chmod +x spotifai.sh
 ```
 
 # Usage
-``Usage: spotifai -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]``</br>
-``&nbsp;&nbsp;-a | --archive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Set new database of songs``</br>;
-``&nbsp;&nbsp;-p | --playlist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Youtube playlist id or archive file``</br>;
-``&nbsp;&nbsp;-s | --songs-path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Folder path where you want to store the songs``</br>;
-``&nbsp;&nbsp;-h | --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;This message``</br>;
+spotifai -p PLAYLIST-ID || -a ARCHIVE-FILE [-s SONGS-FOLDER-PATH || -h]</br>
+&nbsp;&nbsp;-a | --archive&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Set new database of songs</br>;
+&nbsp;&nbsp;-p | --playlist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Youtube playlist id or archive file</br>;
+&nbsp;&nbsp;-s | --songs-path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;Folder path where you want to store the songs</br>;
+&nbsp;&nbsp;-h | --help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=>&nbsp;&nbsp;This message</br>;
 
 # Local mode (it's free) 🤳
  Go to F-droid and install termux + termux-widget and run the previous installation commands.<br/>
