@@ -1,5 +1,5 @@
 # Spotifai 🏴‍☠️
- listen to music as it was done in the 2000s ~~ (how not to pay for music) ~~
+ listen to music as it was done in the 2000s ~~(how not to pay for music)~~
  
 # Get PLAYLIST-ID
  https://www.youtube.com/playlist?list=XXXXXXXXXXXXXXXX  <---- id is here
