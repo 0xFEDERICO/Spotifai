@@ -1,13 +1,13 @@
 # Spotifai 🏴‍☠️
  listen to music as it was done in the 2000s ~~(how not to pay for music)~~
  
-# Get PLAYLIST-ID
+# Get PLAYLIST-ID ✔️
  https://www.youtube.com/playlist?list=XXXXXXXXXXXXXXXX  <---- id is here
 
-# Install pip3 and git
+# Install pip3 and git ✔️
  ``sudo apt install python3-pip git``
 
-# Install Spotifai
+# Install Spotifai ✔️
 ```
 pip3 install youtube-dl eyeD3
 sudo apt install ffmpeg imagemagick jq
